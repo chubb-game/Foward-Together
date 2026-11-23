@@ -2,461 +2,695 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ALL ABOARD | CHUBB ASSURANCE</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+
 :root {
- --navy:#071426;
- --gold:#D8B66C;
- --ivory:#F5F0E5;
+
+  --navy: #071426;
+
+  --gold: #D8B66C;
+
+  --ivory: #F5F0E5;
+
 }
-* {box-sizing:border-box}
+
+* { box-sizing: border-box; }
+
 body {
- margin:0;
- background:var(--navy);
- color:var(--ivory);
- font-family:Arial,sans-serif;
- text-align:center;
+
+  margin: 0;
+
+  background: var(--navy);
+
+  color: var(--ivory);
+
+  font-family: Arial, sans-serif;
+
+  overflow: hidden;
+
 }
-header {padding:20px 10px 8px}
+
+#led, #player {
+
+  min-height: 100vh;
+
+  width: 100%;
+
+}
+
+#led {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 4vh 5vw;
+
+  background:
+
+    radial-gradient(ellipse at 50% 80%, #17416a 0%, transparent 55%),
+
+    linear-gradient(150deg, #102d52, #071426 65%);
+
+}
+
 .brand {
- color:var(--gold);
- letter-spacing:5px;
- font-size:13px;
- font-weight:bold;
+
+  color: var(--gold);
+
+  letter-spacing: .45em;
+
+  font-size: clamp(12px, 1.5vw, 22px);
+
+  font-weight: bold;
+
+  text-align: center;
+
 }
+
 h1 {
- font-size:clamp(30px,5vw,60px);
- margin:12px 0;
- letter-spacing:3px;
+
+  margin: 12px 0 4px;
+
+  font-size: clamp(38px, 7vw, 92px);
+
+  letter-spacing: .12em;
+
+  text-align: center;
+
 }
+
 .subtitle {
- color:#d8cba9;
- letter-spacing:4px;
- font-size:13px;
+
+  text-align: center;
+
+  letter-spacing: .35em;
+
+  font-size: clamp(12px, 1.5vw, 20px);
+
 }
-main {max-width:1200px;margin:auto;padding:15px}
-.panel {
- border:1px solid #9b804d;
- border-radius:18px;
- padding:20px;
- background:linear-gradient(145deg,#10243d,#071426);
- margin:15px auto;
+
+.score {
+
+  text-align: center;
+
+  margin: 1vh 0;
+
 }
-.hidden {display:none!important}
-/* PLAYER */
-.tap {
- width:min(72vw,260px);
- height:min(72vw,260px);
- border-radius:50%;
- border:5px solid #f6df9f;
- background:radial-gradient(circle,#fff0bd,#d8b66c 65%,#98743b);
- color:#071426;
- font-size:26px;
- font-weight:bold;
- box-shadow:0 0 35px #d8b66c88;
- cursor:pointer;
- margin:25px auto;
+
+#counter {
+
+  color: var(--gold);
+
+  font-size: clamp(55px, 9vw, 120px);
+
+  font-weight: 900;
+
+  letter-spacing: .06em;
+
 }
-.tap:active {transform:scale(.96)}
-.counter {
- font-size:clamp(35px,6vw,58px);
- color:var(--gold);
- font-weight:bold;
+
+#target {
+
+  font-size: clamp(15px, 2vw, 24px);
+
+  letter-spacing: .2em;
+
 }
-.small {font-size:12px;color:#b8bdc6}
-/* LED CITY SCENE */
-.city-scene {
- position:relative;
- width:100%;
- aspect-ratio:16/9;
- min-height:300px;
- overflow:hidden;
- border-radius:14px;
- background:
-   radial-gradient(ellipse at 50% 75%,#23405c 0%,transparent 48%),
-   linear-gradient(180deg,#030a16 0%,#10233a 65%,#172a3c 100%);
- margin:20px auto;
+
+.progress-wrap {
+
+  width: min(80vw, 1100px);
+
+  height: 15px;
+
+  border: 1px solid var(--gold);
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  margin: 12px auto;
+
 }
-/* Stars */
-.stars {
- position:absolute;
- inset:0 0 45% 0;
- background-image:
-   radial-gradient(2px 2px at 10% 20%,#fff 90%,transparent),
-   radial-gradient(2px 2px at 30% 40%,#d8b66c 90%,transparent),
-   radial-gradient(2px 2px at 60% 15%,#fff 90%,transparent),
-   radial-gradient(2px 2px at 80% 35%,#fff 90%,transparent),
-   radial-gradient(2px 2px at 95% 10%,#d8b66c 90%,transparent);
- opacity:.8;
+
+#progress {
+
+  height: 100%;
+
+  width: 0%;
+
+  background: linear-gradient(90deg, #b78b38, #fff0b5);
+
+  transition: width .4s ease;
+
 }
-/* City buildings */
-.skyline {
- position:absolute;
- bottom:23%;
- left:0;
- width:100%;
- height:43%;
- display:flex;
- align-items:flex-end;
- justify-content:space-around;
- gap:3px;
+
+#percent {
+
+  color: var(--gold);
+
+  text-align: center;
+
+  letter-spacing: .2em;
+
+  font-weight: bold;
+
 }
+
+.city {
+
+  width: 100%;
+
+  height: 34vh;
+
+  min-height: 170px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-bottom: 5px solid var(--gold);
+
+  background: linear-gradient(#0b2340, #102e4b);
+
+}
+
+.buildings {
+
+  position: absolute;
+
+  bottom: 62px;
+
+  width: 100%;
+
+  height: 75%;
+
+  display: flex;
+
+  align-items: end;
+
+  justify-content: space-around;
+
+  gap: 2%;
+
+}
+
 .building {
- position:relative;
- flex:1;
- max-width:90px;
- background:linear-gradient(90deg,#142c43,#29445b,#10243b);
- border:1px solid #52667a55;
- box-shadow:0 0 18px #d8b66c11;
+
+  width: 9%;
+
+  border: 2px solid #b99452;
+
+  background:
+
+    repeating-linear-gradient(0deg, transparent 0 16px, #d8b66c 17px 19px),
+
+    repeating-linear-gradient(90deg, transparent 0 16px, #d8b66c 17px 19px),
+
+    linear-gradient(120deg, #153b60, #08182c);
+
+  box-shadow: 0 0 16px #b78b3850;
+
 }
-.building:before {
- content:"";
- position:absolute;
- inset:9px 7px;
- background:
-   repeating-linear-gradient(90deg,transparent 0 12px,#d8b66c 13px 16px,transparent 17px 24px),
-   repeating-linear-gradient(0deg,transparent 0 13px,#d8b66c 14px 17px,transparent 18px 25px);
- opacity:.55;
+
+.building:nth-child(1), .building:nth-child(5) { height: 48%; }
+
+.building:nth-child(2), .building:nth-child(7) { height: 75%; }
+
+.building:nth-child(3), .building:nth-child(6) { height: 60%; }
+
+.building:nth-child(4) { height: 95%; }
+
+.rail {
+
+  position: absolute;
+
+  bottom: 30px;
+
+  height: 5px;
+
+  width: 100%;
+
+  background: var(--gold);
+
+  box-shadow: 0 8px 0 #9b783c;
+
 }
-.b1{height:45%}
-.b2{height:75%}
-.b3{height:55%}
-.b4{height:100%;max-width:75px}
-.b5{height:65%}
-.b6{height:85%}
-.b7{height:48%}
-.b8{height:70%}
-/* Landmark */
-.landmark {
- position:absolute;
- bottom:66%;
- left:48%;
- width:9%;
- height:24%;
- border-radius:50% 50% 0 0;
- background:linear-gradient(90deg,#192e44,#456077,#14253a);
- border:1px solid #d8b66c66;
+
+.train {
+
+  position: absolute;
+
+  bottom: 35px;
+
+  left: 2%;
+
+  font-size: clamp(48px, 8vw, 100px);
+
+  transform: translateX(0);
+
+  transition: left 1s ease;
+
+  filter: drop-shadow(0 0 12px #f5d58c);
+
+  white-space: nowrap;
+
 }
-.landmark:after {
- content:"";
- position:absolute;
- top:-20%;
- left:48%;
- height:20%;
- border-left:3px solid var(--gold);
-}
-/* Railway */
-.railway {
- position:absolute;
- bottom:12%;
- left:0;
- width:100%;
- height:15%;
- background:linear-gradient(180deg,#101d2c,#03080f);
- border-top:4px solid #b18d4e;
- border-bottom:4px solid #b18d4e;
-}
-.railway:after {
- content:"";
- position:absolute;
- top:50%;
- left:0;
- width:100%;
- border-top:3px dashed #d8b66c;
- box-shadow:0 0 15px #d8b66c;
-}
-/* Train */
-.train-wrap {
- position:absolute;
- left:0%;
- bottom:24%;
- width:38%;
- max-width:390px;
- min-width:190px;
- transform:translateX(0);
- transition:left 1s cubic-bezier(.2,.7,.3,1);
- z-index:5;
-}
-.train-body {
- position:relative;
- height:65px;
- border-radius:22px 35px 8px 8px;
- background:linear-gradient(180deg,#f6f1e7 0%,#d8d2c5 45%,#8b7651 100%);
- border:2px solid #e8c77e;
- box-shadow:0 0 25px #d8b66c77;
- overflow:hidden;
-}
-.train-body:before {
- content:"";
- position:absolute;
- left:8%;
- right:8%;
- top:12px;
- height:22px;
- background:repeating-linear-gradient(
-   90deg,#142a40 0 35px,#d8b66c 36px 39px,#142a40 40px 46px
- );
- border-radius:5px;
-}
-.train-body:after {
- content:"";
- position:absolute;
- bottom:8px;
- left:0;
- width:100%;
- border-bottom:4px solid #b18a46;
-}
-.train-front {
- position:absolute;
- right:0;
- top:5px;
- width:13%;
- height:45px;
- border-radius:0 30px 6px 0;
- background:#f2ead7;
- border-right:5px solid #b18a46;
-}
-.headlight {
- position:absolute;
- right:-12px;
- top:32px;
- width:20px;
- height:12px;
- border-radius:50%;
- background:#fff3b0;
- box-shadow:0 0 18px 8px #ffe7a1;
-}
-.wheel {
- position:absolute;
- bottom:-7px;
- left:22%;
- width:22px;
- height:22px;
- background:#121d2b;
- border:3px solid #d8b66c;
- border-radius:50%;
-}
-.wheel.two {left:70%}
-/* Station */
+
 .station {
- position:absolute;
- right:2%;
- bottom:25%;
- font-size:clamp(25px,5vw,50px);
- z-index:2;
- filter:drop-shadow(0 0 12px #d8b66c);
+
+  position: absolute;
+
+  right: 2%;
+
+  bottom: 44px;
+
+  color: var(--gold);
+
+  font-size: 12px;
+
+  letter-spacing: .2em;
+
 }
-.station-label {
- position:absolute;
- right:1%;
- bottom:18%;
- color:var(--gold);
- font-size:10px;
- letter-spacing:2px;
+
+#status {
+
+  color: var(--gold);
+
+  text-align: center;
+
+  letter-spacing: .2em;
+
+  font-size: clamp(12px, 1.5vw, 20px);
+
 }
-.progress {
- width:100%;
- height:15px;
- border-radius:20px;
- overflow:hidden;
- background:#26384c;
- margin:18px 0;
-}
-.bar {
- width:0%;
- height:100%;
- background:linear-gradient(90deg,#a77b35,#ffe9a6);
- box-shadow:0 0 15px #d8b66c;
- transition:width .6s;
-}
-.status {color:var(--gold);letter-spacing:2px}
+
 #finish {
- padding:20px 5px;
- color:var(--gold);
- font-size:clamp(25px,5vw,55px);
- letter-spacing:3px;
- text-shadow:0 0 25px #d8b66c;
+
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 5;
+
+  background: radial-gradient(circle, #244c73, #071426 75%);
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+
+  animation: glow 1.5s infinite alternate;
+
 }
-button:disabled {opacity:.5;cursor:not-allowed}
-@media(max-width:600px) {
- .city-scene {min-height:250px}
- .train-wrap {width:48%;min-width:150px}
- .train-body {height:48px}
- .train-body:before {height:16px;top:8px}
- .train-front {height:34px}
+
+#finish strong {
+
+  color: var(--gold);
+
+  font-size: clamp(35px, 7vw, 90px);
+
+  letter-spacing: .1em;
+
+}
+
+#finish span {
+
+  margin-top: 20px;
+
+  font-size: clamp(20px, 3vw, 36px);
+
+  letter-spacing: .35em;
+
+}
+
+@keyframes glow {
+
+  from { filter: brightness(1); }
+
+  to { filter: brightness(1.6); }
+
+}
+
+#player {
+
+  display: none;
+
+  padding: 8vh 7vw;
+
+  text-align: center;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+
+    radial-gradient(circle at 50% 20%, #1d4770, transparent 50%),
+
+    var(--navy);
+
+}
+
+#player h2 {
+
+  color: var(--gold);
+
+  font-size: clamp(30px, 8vw, 48px);
+
+  letter-spacing: .12em;
+
+}
+
+#player p {
+
+  line-height: 1.6;
+
+  font-size: 17px;
+
+}
+
+#tap {
+
+  width: min(75vw, 330px);
+
+  height: min(75vw, 330px);
+
+  border-radius: 50%;
+
+  border: 7px solid var(--gold);
+
+  background: radial-gradient(circle, #315c80, #10243d);
+
+  color: var(--ivory);
+
+  font-size: clamp(25px, 7vw, 38px);
+
+  font-weight: 900;
+
+  letter-spacing: .06em;
+
+  box-shadow: 0 0 35px #d8b66c70;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+}
+
+#tap:active { transform: scale(.96); }
+
+#tap:disabled { opacity: .45; }
+
+#playerCount {
+
+  color: var(--gold);
+
+  font-size: 24px;
+
+  margin: 25px;
+
+}
+
+#message {
+
+  color: var(--gold);
+
+  min-height: 24px;
+
 }
 </style>
 </head>
 <body>
+<section id="led">
 <header>
 <div class="brand">CHUBB ASSURANCE PRESENTS</div>
 <h1>ALL ABOARD</h1>
 <div class="subtitle">THE JOURNEY BEGINS</div>
 </header>
-<main>
-<!-- PLAYER SCREEN -->
-<section id="player" class="hidden">
-<div class="panel">
-<div class="brand">POWER OUR JOURNEY</div>
-<h2>LET'S MOVE THE TRAIN!</h2>
-<p>Every tap brings us closer to the destination.</p>
-<button class="tap" id="tapButton">TAP<br>TO POWER</button>
-<p>YOUR CONTRIBUTION</p>
-<div class="counter" id="myTaps">0</div>
-<p class="small">One team. One journey. One destination.</p>
-<div class="status" id="playerStatus">WAITING FOR DEPARTURE</div>
+<div class="score">
+<div class="brand">POWER THE JOURNEY</div>
+<div id="counter">0</div>
+<div id="target">/ 750 TAPS</div>
+<div class="progress-wrap"><div id="progress"></div></div>
+<div id="percent">0% POWERED</div>
 </div>
+<div class="city">
+<div class="buildings">
+<div class="building"></div><div class="building"></div>
+<div class="building"></div><div class="building"></div>
+<div class="building"></div><div class="building"></div>
+<div class="building"></div>
+</div>
+<div class="rail"></div>
+<div class="train" id="train">🚄</div>
+<div class="station">DESTINATION</div>
+</div>
+<div id="status">THE JOURNEY IS WAITING TO BEGIN</div>
 </section>
-<!-- LED SCREEN -->
-<section id="led" class="hidden">
-<div class="panel">
+<section id="player">
 <div class="brand">CHUBB ASSURANCE</div>
-<h2>POWER THE JOURNEY</h2>
-<div class="counter">
-<span id="total">0</span>
-<span style="font-size:22px;color:#ddd"> / </span>
-<span id="target">750</span>
-</div>
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
-<div class="status" id="percent">0% POWERED</div>
-<div class="city-scene">
-<div class="stars"></div>
-<div class="skyline">
-<div class="building b1"></div>
-<div class="building b2"></div>
-<div class="building b3"></div>
-<div class="building b4"></div>
-<div class="building b5"></div>
-<div class="building b6"></div>
-<div class="building b7"></div>
-<div class="building b8"></div>
-</div>
-<div class="landmark"></div>
-<div class="railway"></div>
-<div class="station">🚉</div>
-<div class="station-label">DESTINATION</div>
-<div class="train-wrap" id="train">
-<div class="train-body">
-<div class="train-front"></div>
-<div class="headlight"></div>
-<div class="wheel"></div>
-<div class="wheel two"></div>
-</div>
-</div>
-</div>
-<div id="finish" class="hidden">
-     FORWARD, TOGETHER
-<div style="font-size:22px;margin-top:15px">
-       CHUBB ASSURANCE
-</div>
-</div>
-<p class="subtitle">ONE TEAM · ONE JOURNEY · ONE DESTINATION</p>
-</div>
+<h2>ALL ABOARD</h2>
+<p>Let's power the journey together!<br>Tap the button to move our train forward.</p>
+<button id="tap">TAP TO<br>POWER</button>
+<div id="playerCount">0 / 750 TAPS</div>
+<div id="message">Ready to board?</div>
 </section>
-<div id="preview" class="panel">
-<p class="brand">ALL ABOARD – GAME PREVIEW</p>
-<p>Giao diện đang ở chế độ xem thử.</p>
+<div id="finish">
+<strong>FORWARD, TOGETHER</strong>
+<span>CHUBB ASSURANCE</span>
 </div>
-</main>
 <script>
-// Supabase connection will be configured in the next step.
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+/* THAY HAI GIA TRI BEN DUOI BANG THONG TIN SUPABASE */
+
+const SUPABASE_URL = "https://comtbtlbxbyowkrgeknl.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_RhLqot2DOSVmNG7SjnDsrg_avkUYEhw";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const params = new URLSearchParams(location.search);
-const mode = params.get("screen") || "led";
-const player = document.getElementById("player");
+
+const isPlayer = params.get("mode") === "player";
+
 const led = document.getElementById("led");
-const preview = document.getElementById("preview");
-if (mode === "play") {
- player.classList.remove("hidden");
-} else {
- led.classList.remove("hidden");
+
+const player = document.getElementById("player");
+
+if (isPlayer) {
+
+  led.style.display = "none";
+
+  player.style.display = "flex";
+
 }
-preview.classList.add("hidden");
-let db = null;
-let myTaps = 0;
+
+let currentTotal = 0;
+
+let targetTotal = 750;
+
 let gameStatus = "waiting";
-function render(total, target, status) {
- const safeTarget = Math.max(Number(target) || 750, 1);
- const safeTotal = Math.max(Number(total) || 0, 0);
- const percent = Math.min(100, safeTotal / safeTarget * 100);
- gameStatus = status || "waiting";
- if (mode !== "play") {
-   document.getElementById("total").textContent = safeTotal;
-   document.getElementById("target").textContent = safeTarget;
-   document.getElementById("bar").style.width = percent + "%";
-   document.getElementById("percent").textContent =
-     Math.floor(percent) + "% POWERED";
-   // Move the train from left to right.
-   document.getElementById("train").style.left =
-     `calc(${percent * 0.62}% )`;
-   document.getElementById("finish").classList.toggle(
-     "hidden", percent < 100
-   );
- }
- const playerStatus = document.getElementById("playerStatus");
- if (playerStatus) {
-   playerStatus.textContent =
-     status === "running" ? "TRAIN IS MOVING!" :
-     status === "paused" ? "JOURNEY PAUSED" :
-     status === "finished" ? "ARRIVED AT DESTINATION" :
-     "WAITING FOR DEPARTURE";
- }
+
+let lastTapTime = 0;
+
+function render(data) {
+
+  if (!data) return;
+
+  currentTotal = Number(data.total_taps || 0);
+
+  targetTotal = Number(data.target_taps || 750);
+
+  gameStatus = data.status || "waiting";
+
+  const percent = Math.min(100, currentTotal / targetTotal * 100);
+
+  const rounded = Math.floor(percent);
+
+  document.getElementById("counter").textContent =
+
+    currentTotal.toLocaleString("en-US");
+
+  document.getElementById("target").textContent =
+
+    "/ " + targetTotal.toLocaleString("en-US") + " TAPS";
+
+  document.getElementById("progress").style.width = percent + "%";
+
+  document.getElementById("percent").textContent = rounded + "% POWERED";
+
+  document.getElementById("train").style.left =
+
+    (2 + percent * 0.78) + "%";
+
+  document.getElementById("status").textContent =
+
+    gameStatus === "running" ? "ALL ABOARD — POWER THE JOURNEY" :
+
+    gameStatus === "waiting" ? "THE JOURNEY IS WAITING TO BEGIN" :
+
+    gameStatus === "paused" ? "JOURNEY PAUSED" : "JOURNEY COMPLETE";
+
+  document.getElementById("playerCount").textContent =
+
+    currentTotal.toLocaleString("en-US") + " / " +
+
+    targetTotal.toLocaleString("en-US") + " TAPS";
+
+  const done = currentTotal >= targetTotal;
+
+  if (done) {
+
+    document.getElementById("finish").style.display = "flex";
+
+    document.getElementById("tap").disabled = true;
+
+    document.getElementById("message").textContent = "JOURNEY COMPLETE!";
+
+  } else {
+
+    document.getElementById("finish").style.display = "none";
+
+    document.getElementById("tap").disabled = gameStatus !== "running";
+
+    document.getElementById("message").textContent =
+
+      gameStatus === "running" ? "Keep powering the journey!" :
+
+      gameStatus === "paused" ? "The game is paused." :
+
+      "Waiting for the host to start.";
+
+  }
+
 }
-async function connectGame() {
- if (!window.supabase ||
-     SUPABASE_URL === "YOUR_SUPABASE_URL" ||
-     SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY") {
-   return;
- }
- db = window.supabase.createClient(
-   SUPABASE_URL, SUPABASE_ANON_KEY
- );
- const {data, error} = await db
-   .from("game_state")
-   .select("total_taps,target_taps,status")
-   .eq("id",1)
-   .single();
- if (error) {
-   console.error(error);
-   return;
- }
- render(data.total_taps,data.target_taps,data.status);
- // Only the LED screen subscribes to realtime updates.
- if (mode !== "play") {
-   db.channel("led-game-live")
-     .on("postgres_changes", {
-       event:"UPDATE",
-       schema:"public",
-       table:"game_state",
-       filter:"id=eq.1"
-     }, payload => {
-       const row = payload.new;
-       render(row.total_taps,row.target_taps,row.status);
-     })
-     .subscribe();
- }
+
+async function loadGame() {
+
+  const { data, error } = await db
+
+    .from("game_state")
+
+    .select("id,total_taps,target_taps,status")
+
+    .eq("id", 1)
+
+    .single();
+
+  if (error) {
+
+    document.getElementById("status").textContent =
+
+      "DATABASE CONNECTION ERROR";
+
+    document.getElementById("message").textContent =
+
+      "Please check the Supabase connection.";
+
+    console.error(error);
+
+    return;
+
+  }
+
+  render(data);
+
 }
-document.getElementById("tapButton").addEventListener(
- "click", async () => {
-   if (!db || gameStatus !== "running") return;
-   const button = document.getElementById("tapButton");
-   button.disabled = true;
-   const {error} = await db.rpc("add_game_tap");
-   if (!error) {
-     myTaps++;
-     document.getElementById("myTaps").textContent = myTaps;
-   } else {
-     console.error(error);
-   }
-   button.disabled = false;
- }
-);
-connectGame();
+
+document.getElementById("tap").addEventListener("click", async () => {
+
+  const now = Date.now();
+
+  if (now - lastTapTime < 180 || gameStatus !== "running") return;
+
+  lastTapTime = now;
+
+  const button = document.getElementById("tap");
+
+  button.disabled = true;
+
+  const { data, error } = await db.rpc("add_game_tap");
+
+  if (error) {
+
+    document.getElementById("message").textContent =
+
+      "Tap chưa được ghi nhận. Hãy thử lại.";
+
+    console.error(error);
+
+  } else {
+
+    currentTotal = Number(data);
+
+    document.getElementById("playerCount").textContent =
+
+      currentTotal.toLocaleString("en-US") + " / " +
+
+      targetTotal.toLocaleString("en-US") + " TAPS";
+
+    if (currentTotal >= targetTotal) {
+
+      document.getElementById("message").textContent =
+
+        "JOURNEY COMPLETE!";
+
+    } else {
+
+      document.getElementById("message").textContent = "Great! Keep going!";
+
+    }
+
+  }
+
+  setTimeout(() => {
+
+    button.disabled = gameStatus !== "running" ||
+
+      currentTotal >= targetTotal;
+
+  }, 180);
+
+});
+
+/* Chi man hinh LED dang ky realtime */
+
+if (!isPlayer) {
+
+  db.channel("game-state-led")
+
+    .on("postgres_changes", {
+
+      event: "*",
+
+      schema: "public",
+
+      table: "game_state"
+
+    }, payload => render(payload.new))
+
+    .subscribe();
+
+}
+
+loadGame();
 </script>
 </body>
 </html>
+ 
