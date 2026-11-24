@@ -483,8 +483,6 @@ const SUPABASE_URL = "https://comtbtlbxbyowkrgeknl.supabase.co";
 
 const SUPABASE_KEY = "sb_publishable_RhLqot2DOSVmNG7SjnDsrg_avkUYEhw";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 const params = new URLSearchParams(location.search);
 
 const isPlayer = params.get("mode") === "player";
@@ -501,6 +499,7 @@ if (isPlayer) {
 
 }
 
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentTotal = 0;
 
 let targetTotal = 750;
